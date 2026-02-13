@@ -2,181 +2,99 @@
 
 import { useState } from "react";
 
-const OFFER_ELEMENTS = [
-  {
-    id: "diagnostyka",
-    name: 'Diagnostyka "Forma + Mózg + Weekend"',
-    desc: "Rozkładam na części co Cię sabotuje. Sen, energia, weekend, głowa.",
-    tier: "solo",
-  },
-  {
-    id: "zywienie",
-    name: "System żywieniowy",
-    desc: "Jedzenie które działa z Twoim życiem. Nie z Excelem.",
-    tier: "solo",
-  },
-  {
-    id: "trening",
-    name: "System treningowy",
-    desc: "Konkretny plan. Wchodzisz, robisz, wychodzisz. Bez kombinowania.",
-    tier: "solo",
-  },
-  {
-    id: "reset",
-    name: 'Protokół "Reset po Weekendzie"',
-    desc: "Sobota była ciężka? Poniedziałek nie musi być stracony.",
-    tier: "solo",
-  },
-  {
-    id: "korekta_tyg",
-    name: "Korekta tygodniowa",
-    desc: "Raz w tygodniu sprawdzam co działa, co nie. Korygujemy na bieżąco.",
-    tier: "solo",
-  },
-  {
-    id: "baza_protokolow",
-    name: "Baza protokołów",
-    desc: "Gotowe schematy na podróż, deadline, kiepski sen. Otwierasz i robisz.",
-    tier: "solo",
-  },
-  {
-    id: "codzienny_kontakt",
-    name: "Codzienny kontakt",
-    desc: "Piszesz kiedy potrzebujesz. Odpisuję codziennie.",
-    tier: "standard",
-  },
-  {
-    id: "korekta_codzienna",
-    name: "Korekta codzienna",
-    desc: "Coś poszło nie tak? Łapiemy to dziś, nie za tydzień.",
-    tier: "standard",
-  },
-  {
-    id: "protokoly_sytuacyjne",
-    name: "Protokoły sytuacyjne",
-    desc: "Wyjazd, wesele, deadline — dostajesz plan pod konkretną sytuację.",
-    tier: "standard",
-  },
-  {
-    id: "mozg_wydajnosc",
-    name: '"Mózg w wydajności"',
-    desc: "Kiedy jeść, kiedy kawa, kiedy trening — żebyś nie gasł po 15:00.",
-    tier: "standard",
-  },
-  {
-    id: "suplementacja",
-    name: "Suplementacja",
-    desc: "Dostajesz to co realnie działa. Bez losowych stacków z internetu.",
-    tier: "standard",
-  },
-  {
-    id: "start_24h",
-    name: "Start w 24h",
-    desc: "Decyzja wieczorem, rano masz wszystko gotowe do działania.",
-    tier: "premium",
-  },
-  {
-    id: "jadlospisy",
-    name: "Gotowe jadłospisy + lista zakupów",
-    desc: "Otwierasz telefon — wiesz co jeść i co kupić. Nie musisz myśleć.",
-    tier: "premium",
-  },
-  {
-    id: "odpowiedz_2h",
-    name: "Odpowiedź do 2h",
-    desc: "Piszesz — masz odpowiedź w ciągu dwóch godzin. Nie wieczorem.",
-    tier: "premium",
-  },
-  {
-    id: "michal_pisze",
-    name: "Michał pisze pierwszy",
-    desc: "Nie musisz pamiętać. Ja się odzywam, sprawdzam, przypominam.",
-    tier: "premium",
-  },
-  {
-    id: "voice_tyg",
-    name: "Podsumowanie głosowe co tydzień",
-    desc: "Krótki voice: co poszło, co dalej, co poprawić. Konkrety.",
-    tier: "premium",
-  },
-  {
-    id: "protokoly_person",
-    name: "Protokoły spersonalizowane",
-    desc: "Prezentacja w czwartek? Dostajesz co jeść, jak spać, co wziąć.",
-    tier: "premium",
-  },
-  {
-    id: "notion_kalendarz",
-    name: "Kalendarz tygodnia w Notion",
-    desc: "Cały tydzień rozpisany godzina po godzinie. Otwierasz i robisz.",
-    tier: "premium",
-  },
-  {
-    id: "suple_person",
-    name: "Suplementacja spersonalizowana",
-    desc: "Stack dopasowany pod Ciebie. Energia, sen, hormony — z dawkami i timingiem.",
-    tier: "premium",
-  },
-  {
-    id: "badania_krwi",
-    name: "Interpretacja badań krwi",
-    desc: "Wysyłasz wyniki — tłumaczę co znaczą i co zmieniamy. Co kwartał.",
-    tier: "premium",
-  },
-  {
-    id: "technika_video",
-    name: "Analiza techniki video",
-    desc: "Nagrywasz ćwiczenie, dostajesz korektę. Bez czekania na siłowni.",
-    tier: "premium",
-  },
+const SIGNALS = [
+  "Niższe libido",
+  "Brain fog, ciężko się skupić",
+  "Tłuszcz na brzuchu nie schodzi",
+  "Brak energii mimo snu",
+  "Ciągnie mnie do cukru / junk foodu",
+  "Drażliwość, krótki lont",
+  "Budzę się zmęczony",
+  "Po weekendzie potrzebuję 2-3 dni żeby wrócić",
 ];
 
-const BUDGET_OPTIONS = [
-  { label: "800–1 200 zł / msc", value: "800-1200" },
-  { label: "1 200–1 600 zł / msc", value: "1200-1600" },
-  { label: "1 600–2 200 zł / msc", value: "1600-2200" },
-  { label: "2 200+ zł / msc", value: "2200+" },
-  { label: "Nie wiem jeszcze — pokaż opcje", value: "nie-wiem" },
-];
-
-const TIER_META = {
-  solo: {
-    label: "SOLO",
-    color: "#8B8B8B",
-    tagline: "Baza. System + korekta raz w tygodniu. Sam jedziesz.",
+const PROBLEMS = [
+  {
+    id: "nie_wiem_co_jesc",
+    name: "Nie wiem co jeść",
+    desc: "Dieta nie trzyma, jem chaotycznie, nie mam systemu.",
   },
-  standard: {
-    label: "STANDARD",
-    color: "#E8A838",
-    tagline: "Codzienny kontakt. Reaguję na bieżąco. Nie zostajesz sam.",
+  {
+    id: "trening_bez_efektow",
+    name: "Trenuję ale nie widzę efektów",
+    desc: "Chodzę na siłownię ale nic się nie zmienia.",
   },
-  premium: {
-    label: "PREMIUM",
-    color: "#C0392B",
-    tagline: "Full service. Ja zarządzam, Ty robisz. Zero myślenia.",
+  {
+    id: "weekendy_niszcza",
+    name: "Weekendy niszczą mi progres",
+    desc: "W tygodniu ogarniam, w weekend wszystko się sypie.",
   },
-};
-
-const GOALS = [
-  "Sylwetka / redukcja",
-  "Energia w ciągu dnia",
-  "Sen i regeneracja",
-  "Forma mimo imprez",
-  "Powrót po dłuższej przerwie",
-  "Mózg i produktywność",
+  {
+    id: "gasne_po_15",
+    name: "Gasnę po 15:00, zero fokusu",
+    desc: "Rano jeszcze jakoś, po południu jestem bezużyteczny.",
+  },
+  {
+    id: "suplementy_losowo",
+    name: "Biorę losowe rzeczy z neta albo nic",
+    desc: "Nie wiem co działa, co jest marketingiem, co ma sens.",
+  },
+  {
+    id: "badania_nie_wiem",
+    name: "Mam wyniki badań ale nie wiem co z nimi",
+    desc: "Lekarz mówi że jest ok, a ja czuję że nie jest.",
+  },
+  {
+    id: "potrzebuje_kontaktu",
+    name: "Potrzebuję kogoś kto reaguje na bieżąco",
+    desc: "Sam nie ogarniam, potrzebuję żeby ktoś to pilnował ze mną.",
+  },
+  {
+    id: "chaos_zyciowy",
+    name: "Moje życie jest nieprzewidywalne",
+    desc: "Zmienne godziny, wyjazdy, imprezy. Nie da się tego zaplanować z góry.",
+  },
+  {
+    id: "wracam_po_przerwie",
+    name: "Wracam po dłuższej przerwie",
+    desc: "Kiedyś trenowałem, teraz chcę wrócić ale nie wiem od czego zacząć.",
+  },
+  {
+    id: "chce_zeby_ktos_zarzadzal",
+    name: "Chcę żeby ktoś tym zarządzał za mnie",
+    desc: "Nie chcę myśleć co jeść, kiedy trenować. Chcę otwierać telefon i robić.",
+  },
+  {
+    id: "sen_do_bani",
+    name: "Źle sypiam",
+    desc: "Kładę się zmęczony, budzę się zmęczony. Albo nie mogę zasnąć.",
+  },
+  {
+    id: "hormony_cos_nie_gra",
+    name: "Czuję że coś nie gra hormonalnie",
+    desc: "Libido, energia, nastrój. Coś się zmieniło i nie wiem dlaczego.",
+  },
 ];
 
 export default function Home() {
-  const [selected, setSelected] = useState(new Set());
-  const [budget, setBudget] = useState(null);
-  const [goals, setGoals] = useState(new Set());
+  const [signals, setSignals] = useState(new Set());
+  const [problems, setProblems] = useState(new Set());
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
   const [copied, setCopied] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
 
-  const toggleItem = (id) => {
-    setSelected((prev) => {
+  const toggleSignal = (s) => {
+    setSignals((prev) => {
+      const next = new Set(prev);
+      if (next.has(s)) next.delete(s);
+      else next.add(s);
+      return next;
+    });
+  };
+
+  const toggleProblem = (id) => {
+    setProblems((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -184,66 +102,32 @@ export default function Home() {
     });
   };
 
-  const toggleGoal = (g) => {
-    setGoals((prev) => {
-      const next = new Set(prev);
-      if (next.has(g)) next.delete(g);
-      else next.add(g);
-      return next;
-    });
-  };
-
-  const selectAllTier = (tier) => {
-    const tierItems = OFFER_ELEMENTS.filter((el) => el.tier === tier);
-    const allSelected = tierItems.every((el) => selected.has(el.id));
-    setSelected((prev) => {
-      const next = new Set(prev);
-      tierItems.forEach((el) => {
-        if (allSelected) next.delete(el.id);
-        else next.add(el.id);
-      });
-      return next;
-    });
-  };
-
   const generateSummary = () => {
     const lines = [];
-    lines.push("KONFIGURATOR — Hantle i Talerz");
-    lines.push("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    if (name) lines.push("Imię: " + name);
-    lines.push("");
-    if (goals.size > 0) {
-      lines.push("CO CHCĘ OSIĄGNĄĆ:");
-      goals.forEach((g) => lines.push("  → " + g));
+    lines.push("Cześć, oto moja sytuacja:");
+    if (name) {
       lines.push("");
+      lines.push("Imię: " + name);
     }
-    lines.push("CO MNIE INTERESUJE:");
-    if (selected.size === 0) {
-      lines.push("  (nie zaznaczono)");
-    } else {
-      const tiers = ["solo", "standard", "premium"];
-      tiers.forEach((tier) => {
-        const items = OFFER_ELEMENTS.filter(
-          (el) => el.tier === tier && selected.has(el.id)
-        );
-        if (items.length > 0) {
-          lines.push("  [" + TIER_META[tier].label + "]");
-          items.forEach((el) => lines.push("  → " + el.name));
-        }
-      });
+    if (signals.size > 0) {
+      lines.push("");
+      lines.push("Sygnały z ciała:");
+      signals.forEach((s) => lines.push("  " + s));
     }
-    lines.push("");
-    const budgetLabel = budget
-      ? BUDGET_OPTIONS.find((b) => b.value === budget)?.label
-      : "(nie zaznaczono)";
-    lines.push("BUDŻET MIESIĘCZNY: " + budgetLabel);
+    if (problems.size > 0) {
+      lines.push("");
+      lines.push("Co chcę ogarnąć:");
+      PROBLEMS.filter((p) => problems.has(p.id)).forEach((p) =>
+        lines.push("  " + p.name)
+      );
+    }
     if (note.trim()) {
       lines.push("");
-      lines.push("DODATKOWE INFO: " + note.trim());
+      lines.push("Dodatkowe info: " + note.trim());
     }
     lines.push("");
-    lines.push("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    lines.push("Wygenerowano z konfiguratora @hantleiTalerz");
+    lines.push("---");
+    lines.push("Wysłane z @hantleiTalerz");
     return lines.join("\n");
   };
 
@@ -253,9 +137,8 @@ export default function Home() {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const canGenerate = selected.size > 0 || budget || goals.size > 0;
-  const selectedCount = selected.size;
-  const tierSections = ["solo", "standard", "premium"];
+  const canGenerate = signals.size > 0 || problems.size > 0;
+  const totalSelected = signals.size + problems.size;
 
   const inputStyle = {
     width: "100%",
@@ -278,7 +161,7 @@ export default function Home() {
         style={{
           background: "linear-gradient(180deg, #141414 0%, #0A0A0A 100%)",
           borderBottom: "1px solid #1F1F1F",
-          padding: "48px 24px 36px",
+          padding: "48px 24px 40px",
           textAlign: "center",
         }}
       >
@@ -297,14 +180,14 @@ export default function Home() {
         <h1
           style={{
             fontFamily: "'DM Sans', sans-serif",
-            fontSize: "clamp(26px, 6vw, 40px)",
+            fontSize: "clamp(26px, 6vw, 38px)",
             fontWeight: 700,
             color: "#FFF",
-            margin: "0 0 14px 0",
-            lineHeight: 1.15,
+            margin: "0 0 16px 0",
+            lineHeight: 1.2,
           }}
         >
-          Zbuduj swoją ofertę
+          Pokaż mi co chcesz ogarnąć
         </h1>
         <p
           style={{
@@ -312,17 +195,17 @@ export default function Home() {
             fontSize: "15px",
             maxWidth: "440px",
             margin: "0 auto",
-            lineHeight: 1.6,
+            lineHeight: 1.7,
           }}
         >
-          Zaznacz to co Cię interesuje. Na końcu skopiuj i wrzuć mi w DM —
-          dogadamy szczegóły.
+          Zaznacz to co Cię dotyczy. Wyślij mi wynik w DM, a ja powiem Ci
+          czy i jak mogę pomóc.
         </p>
       </div>
 
       <div style={{ maxWidth: "640px", margin: "0 auto", padding: "0 16px" }}>
         {/* NAME */}
-        <div style={{ padding: "28px 0 8px" }}>
+        <div style={{ padding: "32px 0 8px" }}>
           <label
             style={{
               fontFamily: "'Space Mono', monospace",
@@ -334,7 +217,7 @@ export default function Home() {
               marginBottom: "14px",
             }}
           >
-            Twoje imię
+            Jak masz na imię?
           </label>
           <input
             type="text"
@@ -347,7 +230,7 @@ export default function Home() {
           />
         </div>
 
-        {/* GOALS */}
+        {/* SIGNALS */}
         <div style={{ padding: "28px 0 8px" }}>
           <label
             style={{
@@ -357,221 +240,10 @@ export default function Home() {
               color: "#666",
               textTransform: "uppercase",
               display: "block",
-              marginBottom: "14px",
+              marginBottom: "6px",
             }}
           >
-            Co chcesz osiągnąć?
-          </label>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-            {GOALS.map((g) => {
-              const active = goals.has(g);
-              return (
-                <button
-                  key={g}
-                  onClick={() => toggleGoal(g)}
-                  style={{
-                    padding: "10px 18px",
-                    background: active ? "#E8A838" : "#141414",
-                    color: active ? "#000" : "#999",
-                    border: active ? "1px solid #E8A838" : "1px solid #222",
-                    borderRadius: "100px",
-                    fontSize: "13px",
-                    fontWeight: active ? 600 : 400,
-                    fontFamily: "'DM Sans', sans-serif",
-                    cursor: "pointer",
-                    transition: "all 0.15s",
-                  }}
-                >
-                  {g}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* TIER SECTIONS */}
-        {tierSections.map((tier) => {
-          const meta = TIER_META[tier];
-          const items = OFFER_ELEMENTS.filter((el) => el.tier === tier);
-          const allSelected = items.every((el) => selected.has(el.id));
-
-          return (
-            <div key={tier} style={{ padding: "28px 0 8px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  marginBottom: "6px",
-                }}
-              >
-                <div
-                  style={{
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "50%",
-                    background: meta.color,
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'Space Mono', monospace",
-                    fontSize: "12px",
-                    letterSpacing: "3px",
-                    color: meta.color,
-                    textTransform: "uppercase",
-                    fontWeight: 700,
-                  }}
-                >
-                  {meta.label}
-                </span>
-                <div
-                  style={{
-                    flex: 1,
-                    height: "1px",
-                    background: meta.color + "33",
-                  }}
-                />
-                <button
-                  onClick={() => selectAllTier(tier)}
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "12px",
-                    color: allSelected ? meta.color : "#555",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "4px 8px",
-                    transition: "color 0.15s",
-                  }}
-                >
-                  {allSelected ? "odznacz" : "zaznacz"} wszystko
-                </button>
-              </div>
-
-              <p
-                style={{
-                  fontSize: "13px",
-                  color: "#444",
-                  margin: "0 0 14px 22px",
-                  fontStyle: "italic",
-                  lineHeight: 1.4,
-                }}
-              >
-                {meta.tagline}
-              </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "5px",
-                }}
-              >
-                {items.map((el) => {
-                  const active = selected.has(el.id);
-                  return (
-                    <button
-                      key={el.id}
-                      onClick={() => toggleItem(el.id)}
-                      style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: "14px",
-                        padding: "13px 16px",
-                        background: active ? "#151515" : "#0C0C0C",
-                        border: active
-                          ? "1px solid " + meta.color + "44"
-                          : "1px solid #161616",
-                        borderRadius: "10px",
-                        cursor: "pointer",
-                        transition: "all 0.15s",
-                        textAlign: "left",
-                        width: "100%",
-                        boxSizing: "border-box",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          borderRadius: "5px",
-                          border: active
-                            ? "2px solid " + meta.color
-                            : "2px solid #2A2A2A",
-                          background: active ? meta.color : "transparent",
-                          flexShrink: 0,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          marginTop: "1px",
-                          transition: "all 0.15s",
-                        }}
-                      >
-                        {active && (
-                          <svg
-                            width="12"
-                            height="12"
-                            viewBox="0 0 12 12"
-                            fill="none"
-                          >
-                            <path
-                              d="M2.5 6L5 8.5L9.5 3.5"
-                              stroke="#000"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        )}
-                      </div>
-                      <div>
-                        <div
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: active ? 600 : 400,
-                            color: active ? "#FFF" : "#BBB",
-                            lineHeight: 1.4,
-                            fontFamily: "'DM Sans', sans-serif",
-                          }}
-                        >
-                          {el.name}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "12.5px",
-                            color: "#555",
-                            marginTop: "2px",
-                            lineHeight: 1.4,
-                            fontFamily: "'DM Sans', sans-serif",
-                          }}
-                        >
-                          {el.desc}
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-
-        {/* BUDGET */}
-        <div style={{ padding: "28px 0 8px" }}>
-          <label
-            style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: "11px",
-              letterSpacing: "3px",
-              color: "#666",
-              textTransform: "uppercase",
-              display: "block",
-              marginBottom: "4px",
-            }}
-          >
-            Ile chcesz w to włożyć?
+            Co czujesz w ciele?
           </label>
           <p
             style={{
@@ -581,7 +253,59 @@ export default function Home() {
               fontFamily: "'DM Sans', sans-serif",
             }}
           >
-            Miesięcznie
+            Zaznacz wszystko co Cię dotyczy
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {SIGNALS.map((s) => {
+              const active = signals.has(s);
+              return (
+                <button
+                  key={s}
+                  onClick={() => toggleSignal(s)}
+                  style={{
+                    padding: "10px 18px",
+                    background: active ? "#C0392B" : "#141414",
+                    color: active ? "#FFF" : "#999",
+                    border: active ? "1px solid #C0392B" : "1px solid #222",
+                    borderRadius: "100px",
+                    fontSize: "13px",
+                    fontWeight: active ? 600 : 400,
+                    fontFamily: "'DM Sans', sans-serif",
+                    cursor: "pointer",
+                    transition: "all 0.15s",
+                  }}
+                >
+                  {s}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* PROBLEMS */}
+        <div style={{ padding: "32px 0 8px" }}>
+          <label
+            style={{
+              fontFamily: "'Space Mono', monospace",
+              fontSize: "11px",
+              letterSpacing: "3px",
+              color: "#666",
+              textTransform: "uppercase",
+              display: "block",
+              marginBottom: "6px",
+            }}
+          >
+            Co chcesz ogarnąć?
+          </label>
+          <p
+            style={{
+              fontSize: "12px",
+              color: "#444",
+              margin: "0 0 14px 0",
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            Zaznacz wszystko co do Ciebie pasuje
           </p>
           <div
             style={{
@@ -590,14 +314,17 @@ export default function Home() {
               gap: "5px",
             }}
           >
-            {BUDGET_OPTIONS.map((opt) => {
-              const active = budget === opt.value;
+            {PROBLEMS.map((p) => {
+              const active = problems.has(p.id);
               return (
                 <button
-                  key={opt.value}
-                  onClick={() => setBudget(active ? null : opt.value)}
+                  key={p.id}
+                  onClick={() => toggleProblem(p.id)}
                   style={{
-                    padding: "14px 16px",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "14px",
+                    padding: "13px 16px",
                     background: active ? "#151515" : "#0C0C0C",
                     border: active
                       ? "1px solid #E8A83844"
@@ -606,16 +333,15 @@ export default function Home() {
                     cursor: "pointer",
                     transition: "all 0.15s",
                     textAlign: "left",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
+                    width: "100%",
+                    boxSizing: "border-box",
                   }}
                 >
                   <div
                     style={{
-                      width: "18px",
-                      height: "18px",
-                      borderRadius: "50%",
+                      width: "20px",
+                      height: "20px",
+                      borderRadius: "5px",
                       border: active
                         ? "2px solid #E8A838"
                         : "2px solid #2A2A2A",
@@ -624,30 +350,51 @@ export default function Home() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      marginTop: "1px",
                       transition: "all 0.15s",
                     }}
                   >
                     {active && (
-                      <div
-                        style={{
-                          width: "6px",
-                          height: "6px",
-                          borderRadius: "50%",
-                          background: "#000",
-                        }}
-                      />
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <path
+                          d="M2.5 6L5 8.5L9.5 3.5"
+                          stroke="#000"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
                     )}
                   </div>
-                  <span
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: active ? 600 : 400,
-                      color: active ? "#FFF" : "#999",
-                      fontFamily: "'DM Sans', sans-serif",
-                    }}
-                  >
-                    {opt.label}
-                  </span>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: active ? 600 : 400,
+                        color: active ? "#FFF" : "#BBB",
+                        lineHeight: 1.4,
+                        fontFamily: "'DM Sans', sans-serif",
+                      }}
+                    >
+                      {p.name}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "12.5px",
+                        color: "#555",
+                        marginTop: "2px",
+                        lineHeight: 1.4,
+                        fontFamily: "'DM Sans', sans-serif",
+                      }}
+                    >
+                      {p.desc}
+                    </div>
+                  </div>
                 </button>
               );
             })}
@@ -664,10 +411,10 @@ export default function Home() {
               color: "#666",
               textTransform: "uppercase",
               display: "block",
-              marginBottom: "4px",
+              marginBottom: "6px",
             }}
           >
-            Coś jeszcze?
+            Chcesz coś dodać?
           </label>
           <p
             style={{
@@ -677,10 +424,10 @@ export default function Home() {
               fontFamily: "'DM Sans', sans-serif",
             }}
           >
-            Opcjonalne — grafik, tryb życia, cel
+            Twój grafik, tryb życia, ile imprezujesz, cokolwiek mi pomoże
           </p>
           <textarea
-            placeholder="Np. pracuję na zmiany, imprezuję co weekend, chcę schudnąć 8kg..."
+            placeholder="Np. pracuję w korpo, imprezuję co weekend, chcę zrzucić 8kg..."
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={3}
@@ -694,9 +441,9 @@ export default function Home() {
           />
         </div>
 
-        {/* COUNTER + CTA */}
+        {/* CTA */}
         <div style={{ padding: "32px 0 20px" }}>
-          {selectedCount > 0 && (
+          {totalSelected > 0 && (
             <div
               style={{
                 textAlign: "center",
@@ -707,12 +454,12 @@ export default function Home() {
                 letterSpacing: "1px",
               }}
             >
-              Zaznaczono: {selectedCount}{" "}
-              {selectedCount === 1
-                ? "element"
-                : selectedCount < 5
-                  ? "elementy"
-                  : "elementów"}
+              {totalSelected}{" "}
+              {totalSelected === 1
+                ? "punkt"
+                : totalSelected < 5
+                  ? "punkty"
+                  : "punktów"} zaznaczonych
             </div>
           )}
           <button
@@ -738,23 +485,24 @@ export default function Home() {
             }}
           >
             {canGenerate
-              ? "GOTOWE — KOPIUJ I PISZ NA DM →"
-              : "Zaznacz co Cię interesuje"}
+              ? "WYŚLIJ MI TO \u2192"
+              : "Zaznacz co Cię dotyczy"}
           </button>
         </div>
 
         {/* FOOTER */}
         <div style={{ textAlign: "center", padding: "8px 0 56px" }}>
-          <div
+          <p
             style={{
-              color: "#333",
-              fontSize: "12px",
-              fontFamily: "'Space Mono', monospace",
-              marginBottom: "8px",
+              color: "#444",
+              fontSize: "13px",
+              fontFamily: "'DM Sans', sans-serif",
+              marginBottom: "12px",
+              lineHeight: 1.6,
             }}
           >
-            Skopiuj podsumowanie i wrzuć w DM
-          </div>
+            Skopiuj wynik i wrzuć mi w DM. Odpiszę osobiście.
+          </p>
           <a
             href="https://instagram.com/hantleiTalerz"
             target="_blank"
@@ -809,11 +557,10 @@ export default function Home() {
           >
             <div
               style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "11px",
-                letterSpacing: "3px",
-                color: "#E8A838",
-                textTransform: "uppercase",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: "18px",
+                fontWeight: 700,
+                color: "#FFF",
                 marginBottom: "8px",
               }}
             >
@@ -824,10 +571,10 @@ export default function Home() {
                 fontSize: "13px",
                 color: "#555",
                 margin: "0 0 20px 0",
-                lineHeight: 1.4,
+                lineHeight: 1.5,
               }}
             >
-              Skopiuj tekst i wklej w DM na Instagramie
+              Skopiuj i wklej mi w DM. Powiem Ci czy i jak mogę pomóc.
             </p>
             <pre
               style={{
@@ -865,7 +612,7 @@ export default function Home() {
                   transition: "all 0.25s",
                 }}
               >
-                {copied ? "SKOPIOWANO ✓" : "KOPIUJ TEKST"}
+                {copied ? "SKOPIOWANO \u2713" : "KOPIUJ I WRZUĆ W DM"}
               </button>
               <button
                 onClick={() => setShowSummary(false)}
